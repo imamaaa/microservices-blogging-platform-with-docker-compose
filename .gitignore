@@ -1,0 +1,17 @@
+# Virtual environment
+venv/
+*.pyc
+__pycache__/
+
+# PostgreSQL data volume
+postgres-data/
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Ignore Docker layer cache
+.docker/

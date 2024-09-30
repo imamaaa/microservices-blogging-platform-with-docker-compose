@@ -1,33 +1,46 @@
-# docker-compose.yml
-
-version: "3.8"
+version: '3.8'
 
 services:
-  mongo:
-    image: mongo:latest
-    container_name: mongo
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: secret
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "27017:27017"
-    networks:
-      - mongo-network
-
-  mongo-express:
-    image: mongo-express:latest
-    container_name: mongo-express
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: secret
-      ME_CONFIG_MONGODB_SERVER: mongo
-    ports:
-      - "8081:8081"
+      - "5050:80"
     depends_on:
-      - mongo
+      - postgres
     networks:
-      - mongo-network
+      - blog-network
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: blogdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql  # Reference your init.sql here
+    networks:
+      - blog-network
+
+  blog-application:
+    build: ./blog-app
+    container_name: blog-app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - blog-network
 
 networks:
-  mongo-network:
-    driver: bridge
+  blog-network:
+
+volumes:
+  postgres-data:
