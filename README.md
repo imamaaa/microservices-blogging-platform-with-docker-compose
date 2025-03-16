@@ -88,7 +88,7 @@ This starts all services in detached mode ('-d').
 | PUT    | `/posts/<id>` | Update a post        |
 | DELETE | `/posts/<id>` | Delete a post        |
 
-
+---
 ## 📦 Deployment on Docker Hub
 
 If you want to publish the Flask application as a Docker image:
